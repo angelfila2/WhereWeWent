@@ -18,3 +18,9 @@ py -3.12 manage.py startapp api
 py -3.12 manage.py makemigrations
 //to apply changes in model.py to db.sqlite3
 py -3.12 manage.py migrate
+
+
+py -3.12 manage.py runserver
+
+
+npm run dev on /wherewewent
