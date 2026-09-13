@@ -1,0 +1,20 @@
+create 2 separate directory - frontend and backend
+
+in frontend:
+nav to frontend folder
+do 
+npm create vite@latest <projectname>
+-choose react
+-choose js
+
+in backend:
+nav to backend folder
+add another folder inside called project
+nav to inside project
+//installs framework
+py -3.12 -m pip install django djangorestframework
+py -3.12 -m django startproject newproject .
+py -3.12 manage.py startapp api
+py -3.12 manage.py makemigrations
+//to apply changes in model.py to db.sqlite3
+py -3.12 manage.py migrate
