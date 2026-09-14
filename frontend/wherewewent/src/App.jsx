@@ -1,40 +1,71 @@
 import "./App.css";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import AddEntry from "./components/AddEntry";
+import EntryCard from "./components/EntryCard";
+import SearchBar from "./components/SearchBar";
 
 function App() {
-  const [books, setBooks] = useState([]);
+  const [entries, setEntries] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("newest");
 
   useEffect(() => {
-    fetchBooks();
+    fetchEntries();
   }, []);
-  const fetchBooks = async () => {
+
+  // Get all entries from Django
+  const fetchEntries = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/books/");
+      const response = await fetch("http://127.0.0.1:8000/api/entries/");
+
       const data = await response.json();
-      setBooks(data);
+
+      setEntries(data);
       console.log(data);
     } catch (err) {
       console.error(err);
     }
   };
 
+  const filteredEntries = entries
+    .filter((entry) => {
+      const search = searchTerm.toLowerCase();
+
+      return (
+        entry.placeName.toLowerCase().includes(search) ||
+        entry.location.toLowerCase().includes(search)
+      );
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.timeWeWent);
+      const dateB = new Date(b.timeWeWent);
+
+      if (sortOrder === "newest") {
+        return dateB - dateA;
+      }
+
+      return dateA - dateB;
+    });
+
   return (
     <>
-      <h1>Book website</h1>
-      <div>
-        <input type="text" placeholder="Search for a book" />
-        <input type="date" placeholder="Release date" />
-        <button> Add button </button>
-      </div>
+      <h1>Where We Went</h1>
+      <AddEntry onEntryAdded={fetchEntries} />
 
       <div>
-        <h2>Books</h2>
-        {books.map((book) => (
-          <div key={book.id}>
-            <h2>{book.title}</h2>
-            <p>Release Year: {book.release_year}</p>
-          </div>
+        <SearchBar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+        />
+        ;<h2>Places We've Been</h2>
+        {filteredEntries.map((entry) => (
+          <EntryCard
+            key={entry.id}
+            entry={entry}
+            onEntryUpdated={fetchEntries}
+          />
         ))}
       </div>
     </>
