@@ -14,6 +14,9 @@ function EntryCard({ entry, onEntryUpdated }) {
   );
   const [editFoodScore, setEditFoodScore] = useState(entry.foodScore);
   const [editPriceScore, setEditPriceScore] = useState(entry.priceScore);
+  const [editLocationScore, setEditLocationScore] = useState(
+    entry.locationScore,
+  );
   const [editNotes, setEditNotes] = useState(entry.notes || "");
 
   const renderStars = (score) => {
@@ -48,6 +51,7 @@ function EntryCard({ entry, onEntryUpdated }) {
 
     setEditFoodScore(entry.foodScore);
     setEditPriceScore(entry.priceScore);
+    setEditLocationScore(entry.locationScore);
     setEditNotes(entry.notes || "");
 
     setIsEditing(true);
@@ -63,6 +67,7 @@ function EntryCard({ entry, onEntryUpdated }) {
 
     setEditFoodScore(entry.foodScore);
     setEditPriceScore(entry.priceScore);
+    setEditLocationScore(entry.locationScore);
     setEditNotes(entry.notes || "");
 
     setIsEditing(false);
@@ -75,6 +80,7 @@ function EntryCard({ entry, onEntryUpdated }) {
       timeWeWent: editTimeWeWent,
       foodScore: editFoodScore,
       priceScore: editPriceScore,
+      locationScore: editLocationScore,
       notes: editNotes,
     };
 
@@ -109,6 +115,32 @@ function EntryCard({ entry, onEntryUpdated }) {
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating entry:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/entries/${entry.id}/`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!response.ok) {
+        console.error("Failed to delete entry");
+        return;
+      }
+
+      console.log("Entry deleted");
+
+      // Refetch entries from Django
+      await onEntryUpdated();
+
+      // Close menu
+      setMenuOpen(false);
+    } catch (error) {
+      console.error("Error deleting entry:", error);
     }
   };
   return (
@@ -160,7 +192,9 @@ function EntryCard({ entry, onEntryUpdated }) {
                     Edit Entry
                   </button>
 
-                  <button type="button">Delete Entry</button>
+                  <button type="button" onClick={handleDelete}>
+                    Delete Entry
+                  </button>
                 </div>
               )}
             </div>
@@ -249,6 +283,34 @@ function EntryCard({ entry, onEntryUpdated }) {
                 <div className="star-pill">{renderStars(entry.priceScore)}</div>
 
                 <span className="score-text">{entry.priceScore} / 5</span>
+              </>
+            )}
+          </div>
+
+          <div className="rating-row">
+            <span className="rating-label">Location Score</span>
+
+            {isEditing ? (
+              <>
+                <input
+                  className="edit-rating-slider"
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  value={editLocationScore}
+                  onChange={(e) => setEditLocationScore(Number(e.target.value))}
+                />
+
+                <span className="score-text">{editLocationScore} / 5</span>
+              </>
+            ) : (
+              <>
+                <div className="star-pill">
+                  {renderStars(entry.locationScore)}
+                </div>
+
+                <span className="score-text">{entry.locationScore} / 5</span>
               </>
             )}
           </div>

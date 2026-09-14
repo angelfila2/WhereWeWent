@@ -5,8 +5,9 @@ function AddEntry({ onEntryAdded }) {
   const [placeName, setPlaceName] = useState("");
   const [location, setLocation] = useState("");
   const [timeWeWent, setTimeWeWent] = useState("");
-  const [foodScore, setFoodScore] = useState(5);
-  const [priceScore, setPriceScore] = useState(5);
+  const [foodScore, setFoodScore] = useState(1);
+  const [priceScore, setPriceScore] = useState(1);
+  const [locationScore, setLocationScore] = useState(1);
   const [notes, setNotes] = useState("");
   const [photo, setPhoto] = useState(null);
 
@@ -23,6 +24,7 @@ function AddEntry({ onEntryAdded }) {
     formData.append("timeWeWent", timeWeWent);
     formData.append("foodScore", foodScore);
     formData.append("priceScore", priceScore);
+    formData.append("locationScore", locationScore);
     formData.append("notes", notes);
 
     if (photo) {
@@ -137,6 +139,7 @@ function AddEntry({ onEntryAdded }) {
           {/* FOOD SCORE */}
           <div className="form-group">
             <label htmlFor="foodScore">Food Score</label>
+            <i>How good was the food? (1 = Poor, 5 = Excellent)</i>
 
             <div className="rating-container">
               <input
@@ -144,7 +147,7 @@ function AddEntry({ onEntryAdded }) {
                 className="rating-slider"
                 type="range"
                 min="1"
-                max="10"
+                max="5"
                 step="1"
                 value={foodScore}
                 onChange={(e) => setFoodScore(Number(e.target.value))}
@@ -157,7 +160,10 @@ function AddEntry({ onEntryAdded }) {
           {/* PRICE SCORE */}
           <div className="form-group">
             <label htmlFor="priceScore">Price Score</label>
-
+            <i>
+              How would you rate the value for the price(PPV)? (1 = Poor, 5 =
+              Excellent)
+            </i>
             <div className="rating-container">
               <input
                 id="priceScore"
@@ -174,10 +180,29 @@ function AddEntry({ onEntryAdded }) {
             </div>
           </div>
 
+          <div className="form-group">
+            <label htmlFor="locationScore">Location Score</label>
+            <i>Is it easy to get to? Is it aircon? (1 = Poor, 5 = Excellent)</i>
+            <div className="rating-container">
+              <input
+                id="locationScore"
+                className="rating-slider"
+                type="range"
+                min="1"
+                max="5"
+                step="1"
+                value={locationScore}
+                onChange={(e) => setLocationScore(Number(e.target.value))}
+              />
+
+              <div className="rating-value">{locationScore}</div>
+            </div>
+          </div>
+
           {/* NOTES */}
           <div className="form-group">
             <label htmlFor="notes">Notes</label>
-
+            <i>Description of the meal, the good and the bad!</i>
             <textarea
               id="notes"
               placeholder="Write something about this place..."

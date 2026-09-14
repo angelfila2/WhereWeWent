@@ -18,14 +18,22 @@ class Entry(models.Model):
     foodScore = models.IntegerField(
         validators=[
             MinValueValidator(1),
-            MaxValueValidator(10)
+            MaxValueValidator(5)
         ]
     )
 
     priceScore = models.IntegerField(
         validators=[
             MinValueValidator(1),
-            MaxValueValidator(10)
+            MaxValueValidator(5)
+        ]
+    )
+    
+
+    locationScore = models.IntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
         ]
     )
 

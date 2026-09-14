@@ -59,7 +59,10 @@ function App() {
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
         />
-        ;<h2>Places We've Been</h2>
+        <i>
+          Found {filteredEntries.length} places out of {entries.length}
+        </i>
+        <h2>Places We've Been</h2>
         {filteredEntries.map((entry) => (
           <EntryCard
             key={entry.id}
